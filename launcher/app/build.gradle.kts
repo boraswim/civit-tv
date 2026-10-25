@@ -2,9 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 // Personal settings (TMDB key, weather city) live in local.properties, outside the source.
+// A -P flag wins over it, e.g. -Ptmdb.apiKey= to build a release without a key.
 val localProps = Properties().apply {
     rootProject.file("local.properties").takeIf { it.exists() }?.reader(Charsets.UTF_8)?.use { load(it) }
 }
+fun setting(name: String, default: String) =
+    ((findProperty(name) as String?) ?: localProps.getProperty(name, default)).trim()
 
 plugins {
     id("com.android.application")
@@ -21,9 +24,9 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
-        buildConfigField("String", "TMDB_KEY", "\"${localProps.getProperty("tmdb.apiKey", "").trim()}\"")
-        buildConfigField("String", "WEATHER_CITY", "\"${localProps.getProperty("weather.city", "Istanbul").trim()}\"")
+        versionName = "1.0.0"
+        buildConfigField("String", "TMDB_KEY", "\"${setting("tmdb.apiKey", "")}\"")
+        buildConfigField("String", "WEATHER_CITY", "\"${setting("weather.city", "Istanbul")}\"")
     }
 
     buildTypes {

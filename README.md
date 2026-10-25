@@ -1,7 +1,7 @@
 # ÇivitTV
 
-An Apple TV 4K–style home screen for Android TV, plus PowerShell scripts that debloat the TV boxes
-and phones it runs alongside. Built for a Xiaomi Mi Box S (MIBOX4, Android TV 9) on a Samsung
+An Apple TV 4K–style home screen for Android TV, plus PowerShell scripts that debloat Android TV
+devices. Built for a Xiaomi Mi Box S (MIBOX4, Android TV 9) on a Samsung
 UE40JU7000, with a Turkish UI (English fallback).
 
 ![ÇivitTV home screen](docs/home-screen.webp)
@@ -51,6 +51,13 @@ UE40JU7000, with a Turkish UI (English fallback).
 Package: `com.tvenhance.home`, minSdk 24, targetSdk 35. Release builds are R8-minified and signed
 with the local debug key, because Compose debug builds are slow on TV boxes.
 
+## Download
+
+A prebuilt APK is attached to each [release](https://github.com/boraswim/civit-tv/releases). It's
+built without a TMDB key, so the film/series shelves stay off. Build it yourself with your own key
+to get them. Put the APK next to `install-launcher.ps1` at
+`launcher/app/build/outputs/apk/release/app-release.apk`, or install it with `adb install`.
+
 ## Build and install
 
 Requirements: JDK 17+, the Android SDK (platform 35), `adb` on your PATH, and the TV with
@@ -94,15 +101,13 @@ image is untouched, so `-Restore` (or a factory reset) brings everything back.
 |---|---|---|
 | `debloat.ps1` | Xiaomi Mi Box S (Android TV 9) | Alphonso ACR, Xiaomi analytics, PatchWall/Mi Channel promos, silent app installer, Play Games/Movies, Mi casting, and the firmware updater (disabled) |
 | `debloat-philips.ps1` | Philips UHD Android TV 2021/22 (Android 11) | Usage logging, sponsored rows and recommendations, silent installer, shop demo, Alexa, Mimi, Calman, and region-only operator/Freeview apps |
-| `debloat-huawei.ps1` | Huawei Mate 20 Pro (EMUI 10.1) | Huawei telemetry, preinstalled Facebook services, Magazine Unlock, recommendations, Quick Apps, Tips, Karaoke, Huawei Video/Music, Play Music/Movies |
 
 ```powershell
 .\debloat.ps1 -Device <tv-ip>:5555
 .\debloat.ps1 -Device <tv-ip>:5555 -Restore
 ```
 
-They deliberately keep streaming apps, Chromecast, Google Assistant, the TV tuner, and anything
-calls, messages or banking apps depend on.
+They deliberately keep streaming apps, Chromecast, Google Assistant and the TV tuner.
 
 ## Data sources
 
@@ -115,5 +120,5 @@ calls, messages or banking apps depend on.
 ## License
 
 [MIT](LICENSE). This is a personal project for my own devices. It isn't affiliated with Apple, Google,
-Xiaomi, Philips, Huawei, Turkcell or any other company mentioned. Netflix, TV+ and the other apps
+Xiaomi, Philips, Turkcell or any other company mentioned. Netflix, TV+ and the other apps
 and logos belong to their respective owners.

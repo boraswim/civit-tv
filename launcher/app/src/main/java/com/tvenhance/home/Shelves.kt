@@ -30,7 +30,7 @@ data class Shelf(val pkg: String, val heading: String, val layout: ShelfLayout, 
 /**
  * Decides what the top shelf shows for each app:
  *  - TV+: the last watched channel(s), then the most popular live channels
- *  - Apple Music: a shortcut into Arşiv, your recently played songs, then Türkiye's top songs
+ *  - apps with a custom shelf from [Extras]
  *  - film & series services: what's popular on them in Türkiye (TMDB)
  *  - everything else: what recently played in that app (from [MediaWatcher])
  * Apps with none of these keep the big-banner view.
@@ -38,7 +38,6 @@ data class Shelf(val pkg: String, val heading: String, val layout: ShelfLayout, 
 class ShelfSource(
     private val context: Context,
     private val tmdb: Tmdb,
-    private val charts: AppleCharts,
     private val channels: TvPlusChannels,
 ) {
 
@@ -63,18 +62,7 @@ class ShelfSource(
                 )
             }
         }
-        if (pkg == APPLE_MUSIC) {
-            val songs = if (network) charts.topSongs() else charts.cached()
-            // Arşiv can't be listed (Apple Music only shares it with approved apps like Android Auto),
-            // so it's a shortcut card that opens Arşiv, followed by what you played and the charts.
-            val archive = ShelfItem(
-                context.getString(R.string.my_archive), context.getString(R.string.my_archive_meta),
-                image = null, wideImage = null, link = "https://music.apple.com/library",
-            )
-            val mine = played.take(2).map(::playedItem)
-            val top = songs.distinctBy { it.artwork }.map(::songItem)
-            return Shelf(pkg, context.getString(R.string.apple_music_shelf, app.label), ShelfLayout.Squares, listOf(archive) + mine + top)
-        }
+        Extras.shelf(context, app, played.map(::playedItem), network)?.let { return it }
         if (tmdb.covers(pkg)) {
             val recs = if (network) tmdb.recommendations(pkg) else tmdb.cached(pkg)
             if (recs.isNotEmpty()) {
@@ -97,13 +85,6 @@ class ShelfSource(
             r.overview.takeIf { it.isNotBlank() },
         ).joinToString("  ·  ")
         return ShelfItem(r.title, meta, r.poster, r.backdrop, link = null)
-    }
-
-    private fun songItem(s: ChartSong): ShelfItem {
-        val meta = listOfNotNull("#${s.rank}", s.artist.takeIf { it.isNotBlank() }, s.year.takeIf { it.isNotBlank() })
-            .joinToString("  ·  ")
-        // music.apple.com links open the song inside the Apple Music app.
-        return ShelfItem(s.title, meta, s.artwork, s.artwork, link = s.url)
     }
 
     private fun channelItem(ch: Channel, rank: Int): ShelfItem =

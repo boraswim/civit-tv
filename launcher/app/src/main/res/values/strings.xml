@@ -27,9 +27,6 @@
     <string name="live">Live</string>
     <string name="tvplus_shelf">%1$s · Last watched and popular channels</string>
     <string name="channel_meta">Live  ·  Popular #%1$d</string>
-    <string name="apple_music_shelf">%1$s · My library and top songs in Türkiye</string>
-    <string name="my_archive">My Library</string>
-    <string name="my_archive_meta">Recently added, playlists, artists and albums</string>
     <string name="just_now">Just now</string>
     <string name="type_tv">Series</string>
     <string name="type_movie">Movie</string>

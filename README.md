@@ -13,7 +13,6 @@ UE40JU7000, with a Turkish UI (English fallback).
 - **Shelf above the focused app**, like tvOS "Top Shelf":
   - **TV+** (Turkcell): the channels you watched last, then the most popular live channels. Any
     channel you watch is recorded, including ones you open inside TV+ itself.
-  - **Apple Music**: *Arşivim* (your library), recently played songs and Türkiye's top songs.
   - **Netflix, Prime Video, Disney+, Apple TV, HBO Max…**: popular titles on that service in
     Türkiye, from TMDB.
   - **Other apps**: what you recently played in them.
@@ -25,9 +24,10 @@ UE40JU7000, with a Turkish UI (English fallback).
     when the ezan time comes.
 - **Ezan notices over any app.** 30 minutes before each ezan and when it arrives, a card appears at
   the top of the screen for 5 seconds with birdsong. Media that's playing is paused.
-- **Remote "mouse mode" for Apple Music.** The official phone app, which has no TV interface, gets an
+- **Remote "mouse mode" for phone-only apps.** Sideloaded phone apps with no TV interface can get an
   on-screen pointer: arrows move it (hold to glide), OK taps, hold OK long-presses, and pushing against
-  an edge scrolls. MENU toggles it. The pointer appears only inside Apple Music.
+  an edge scrolls. MENU toggles it. The pointer appears only inside those apps; none are listed by
+  default (see *Extras* below).
 - **Switching launchers.** The *ÇivitTV* tile in the stock Google TV launcher (and the classic-home
   tile in ÇivitTV) switches between the two. Classic mode is temporary: a reboot always lands on ÇivitTV.
 - **Small touches**: soft bird-chirp navigation sounds, a blue focus border, ambient blurred
@@ -39,13 +39,13 @@ UE40JU7000, with a Turkish UI (English fallback).
 |---|---|
 | Home screen (Jetpack Compose) | `HomeScreen.kt`, `HomeWidgets.kt`, `MainActivity.kt` |
 | Dock apps and banners | `AppRepository.kt`, `Blur.kt` |
-| Shelf content | `Shelves.kt`, `Tmdb.kt`, `AppleCharts.kt`, `TvPlusChannels.kt` |
+| Shelf content | `Shelves.kt`, `Tmdb.kt`, `TvPlusChannels.kt` |
 | Now playing and play history (media sessions) | `NowPlaying.kt` |
 | Weather (Open-Meteo) | `Weather.kt` |
 | Prayer times (Diyanet, via ezanvakti.emushaf.net) | `Ezan.kt`, `EzanNotice.kt`, `EzanChime.kt` |
 | Mouse mode, TV+ channel tracking, on-top notices (accessibility service) | `MouseService.kt`, `A11yGuard.kt` |
 | Launcher switching (local adb over loopback, via dadb) and boot handling | `SwitchActivity.kt`, `BootReceiver.kt` |
-| Apple Music entry in the stock launcher | `AppleMusicActivity.kt` |
+| Hooks for extras kept outside the repo | `LauncherExtras.kt` |
 | Interface sounds (synthesised, no audio files) | `UiSounds.kt` |
 
 Package: `com.tvenhance.home`, minSdk 24, targetSdk 35. Release builds are R8-minified and signed
@@ -77,18 +77,13 @@ cd ..
 
 `.\install-launcher.ps1 -Revert` goes back to the stock launcher.
 
-## Apple Music on Android TV
+## Extras
 
-Apple Music isn't available for Android TV, so the **official, unmodified phone app** is
-sideloaded. Get the bundle yourself (a `.apkm` / `.apks` of Apple Music 4.9.x works on Android 9,
-32-bit ARM), then check it and install it:
-
-```powershell
-.\verify-apple-music.ps1 .\AppleMusic.apkm            # checks Apple's signature, minSdk and ABI
-.\verify-apple-music.ps1 .\AppleMusic.apkm -Install   # installs only the matching splits
-```
-
-App packages are git-ignored and must never be committed.
+`LauncherExtras.kt` is a small hook for app-specific additions that don't belong in this
+repository: which phone-only apps get the pointer, TV banners for apps that ship without one, and
+custom shelves. If `launcher/app/src/personal/` exists, the build compiles it in (Kotlin sources,
+resources and an optional `AndroidManifest.xml`). Otherwise `src/stock/` provides an `Extras` that
+adds nothing. `src/personal/` is git-ignored.
 
 ## Debloat scripts
 
@@ -113,7 +108,6 @@ calls, messages or banking apps depend on.
 
 - [TMDB](https://www.themoviedb.org/) for movie/series shelves (needs a free API key; this product
   uses the TMDB API but is not endorsed or certified by TMDB).
-- [Apple Marketing Tools RSS](https://rss.applemarketingtools.com/) for Türkiye top songs.
 - [tvplus.com.tr](https://tvplus.com.tr/canli-tv) channel list.
 - [Open-Meteo](https://open-meteo.com/) for weather and geocoding.
 - [ezanvakti.emushaf.net](https://ezanvakti.emushaf.net/) for Diyanet prayer times.
@@ -121,7 +115,5 @@ calls, messages or banking apps depend on.
 ## License
 
 [MIT](LICENSE). This is a personal project for my own devices. It isn't affiliated with Apple, Google,
-Xiaomi, Philips, Huawei, Turkcell or any other company mentioned. Apple Music, Netflix, TV+ and the
-other apps and logos belong to their respective owners. The Apple Music tile in this repo is a
-neutral note; to use your own banner, put it at
-`launcher/app/src/release/res/drawable-xhdpi/banner_apple_music.png` (git-ignored).
+Xiaomi, Philips, Huawei, Turkcell or any other company mentioned. Netflix, TV+ and the other apps
+and logos belong to their respective owners.

@@ -38,7 +38,7 @@ class AppRepository(private val context: Context) {
     private val switchEntry by lazy { buildSwitchEntry() }
 
     // Phone-only apps that ship no TV banner but get one from us.
-    private val bannerOverrides = mapOf(APPLE_MUSIC to R.drawable.banner_apple_music)
+    private val bannerOverrides = Extras.banners
 
     // Banners whose logo is tiny inside lots of empty background: shown zoomed into the centre.
     private val bannerZoom = mapOf(TV_PLUS to 2.2f)

@@ -27,9 +27,6 @@
     <string name="live">Canlı</string>
     <string name="tvplus_shelf">%1$s · Son izlenen ve popüler kanallar</string>
     <string name="channel_meta">Canlı yayın  ·  Popüler #%1$d</string>
-    <string name="apple_music_shelf">%1$s · Arşivim ve Türkiye\'de en çok dinlenenler</string>
-    <string name="my_archive">Arşivim</string>
-    <string name="my_archive_meta">Son eklenenler, listeler, sanatçılar ve albümler</string>
     <string name="just_now">Az önce</string>
     <string name="type_tv">Dizi</string>
     <string name="type_movie">Film</string>

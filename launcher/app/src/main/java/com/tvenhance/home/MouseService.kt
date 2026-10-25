@@ -22,11 +22,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 
 /**
- * Remote "mouse mode" for Apple Music (a phone app with no TV interface).
+ * Remote "mouse mode" for phone-only apps (sideloaded apps with no TV interface), listed in
+ * [LauncherExtras.pointerApps].
  *
- * The pointer appears by itself whenever Apple Music is in front and disappears everywhere else.
+ * The pointer appears by itself whenever one of them is in front and disappears everywhere else.
  * The arrows move it, OK taps, holding OK long-presses, pushing against a screen edge scrolls,
- * and MENU turns it off/on. Apple Music itself is untouched: we only draw an overlay and inject
+ * and MENU turns it off/on. The app itself is untouched: we only draw an overlay and inject
  * taps through accessibility.
  */
 class MouseService : AccessibilityService() {
@@ -90,7 +91,7 @@ class MouseService : AccessibilityService() {
         wm.addView(cursor, lp)
         ezanNotice = EzanNotice(this, wm).also { it.start() }
         instance = this
-        // The service can (re)start while Apple Music is already open.
+        // The service can (re)start while a pointer app is already open.
         activeApp()?.let(::foregroundChanged)
     }
 
@@ -104,7 +105,7 @@ class MouseService : AccessibilityService() {
 
     // Looks at the active window a few times while an app opens. Android's window-state event for
     // a newly opened app can be missing (task brought back from the background, trampolines, a
-    // splash screen), so this is what reliably brings the pointer up on entering Apple Music.
+    // splash screen), so this is what reliably brings the pointer up on entering a pointer app.
     private var rechecks = 0
     private val recheck = object : Runnable {
         override fun run() {
@@ -140,7 +141,7 @@ class MouseService : AccessibilityService() {
         foregroundChanged(pkg)
     }
 
-    /** Shows the pointer on entering Apple Music and hides it on leaving. */
+    /** Shows the pointer on entering a pointer app and hides it on leaving. */
     private fun foregroundChanged(pkg: String) {
         if (pkg == foreground) return
         foreground = pkg
@@ -158,7 +159,7 @@ class MouseService : AccessibilityService() {
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
         // Window events can be missed (service restarts, trampolines), so check the active window
-        // on every key press: the pointer must never act outside Apple Music, nor sleep inside it.
+        // on every key press: the pointer must never act outside a pointer app, nor sleep inside one.
         // (Key-ups belong to the press before them, so they skip this window lookup.)
         if (event.action == KeyEvent.ACTION_DOWN) activeApp()?.let(::foregroundChanged)
         val pkg = foreground ?: return false
@@ -373,10 +374,10 @@ class MouseService : AccessibilityService() {
             instance?.let { s -> s.handler.post { s.recheckSoon() } }
         }
 
-        // Apps that get the pointer: only Apple Music, the one phone-only app on this TV.
-        private val MOUSE_APPS = setOf(APPLE_MUSIC)
+        // Apps that get the pointer (none unless a personal build adds some).
+        private val MOUSE_APPS get() = Extras.pointerApps
         private const val RECHECK_MS = 400L
-        private const val RECHECK_TIMES = 6 // ~2.4 s, enough for Apple Music's splash screen
+        private const val RECHECK_TIMES = 6 // ~2.4 s, enough for a phone app's splash screen
         private const val NUDGE = 14f           // px moved by a single short press, for fine aiming
         private const val GLIDE_DELAY_MS = 220L  // how long a press must last before gliding starts
         private const val FRAME_MS = 16L

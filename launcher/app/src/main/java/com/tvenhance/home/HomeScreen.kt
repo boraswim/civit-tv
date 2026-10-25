@@ -140,7 +140,6 @@ fun HomeScreen(
         ShelfSource(
             context,
             Tmdb(BuildConfig.TMDB_KEY, context.cacheDir),
-            AppleCharts(context.cacheDir),
             TvPlusChannels(context.cacheDir),
         )
     }

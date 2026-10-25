@@ -8,9 +8,9 @@ import android.os.Looper
 import android.provider.Settings
 
 /**
- * Keeps Apple Music's mouse mode (an accessibility service) switched on. Android can silently
+ * Keeps the launcher's mouse mode (an accessibility service) switched on. Android can silently
  * drop it from the enabled list (e.g. after tools that take over accessibility), which leaves the
- * remote dead inside Apple Music. WRITE_SECURE_SETTINGS is granted once over adb by
+ * remote dead inside phone-only apps and stops the ezan notices. WRITE_SECURE_SETTINGS is granted once over adb by
  * install-launcher.ps1, so the launcher can restore it itself.
  */
 object A11yGuard {

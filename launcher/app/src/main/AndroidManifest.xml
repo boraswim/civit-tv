@@ -8,14 +8,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Resets temporary classic mode back to ÇivitTV on every boot. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Lets the launcher re-enable Apple Music's mouse mode if Android drops it. Granted via adb. -->
+    <!-- Lets the launcher re-enable its mouse mode if Android drops it. Granted via adb. -->
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <!-- Lets the hold menu's "Kaldır" open Android's uninstall confirmation. -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
     <queries>
         <package android:name="com.google.android.tvlauncher" />
-        <package android:name="com.apple.android.music" />
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -65,7 +64,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Remote pointer for sideloaded phone apps (e.g. Apple Music). Enabled via adb. -->
+        <!-- Remote pointer for sideloaded phone apps, plus on-top ezan notices. Enabled via adb. -->
         <service
             android:name=".MouseService"
             android:exported="true"
@@ -95,21 +94,5 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <!-- Lists the (phone-only) Apple Music app in the stock launcher with a TV banner. -->
-        <activity
-            android:name=".AppleMusicActivity"
-            android:exported="true"
-            android:label="Apple Music"
-            android:banner="@drawable/banner_apple_music"
-            android:taskAffinity=""
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 </manifest>

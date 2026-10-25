@@ -37,6 +37,20 @@ android {
         }
     }
 
+    // App-specific extras kept out of the repository (git-ignored): src/personal is compiled in
+    // when it exists, otherwise src/stock supplies an Extras that adds nothing.
+    val personal = file("src/personal")
+    sourceSets {
+        getByName("main") {
+            java.srcDir(if (personal.exists()) "src/personal/java" else "src/stock/java")
+            if (personal.exists()) res.srcDir("src/personal/res")
+        }
+        if (personal.resolve("AndroidManifest.xml").exists()) {
+            getByName("debug").manifest.srcFile("src/personal/AndroidManifest.xml")
+            getByName("release").manifest.srcFile("src/personal/AndroidManifest.xml")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

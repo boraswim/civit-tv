@@ -105,7 +105,7 @@ private val Glass = Color.White.copy(alpha = 0.07f)
 private val GlassEdge = Color.White.copy(alpha = 0.10f)
 private val Placeholder = Color.White.copy(alpha = 0.06f)
 
-/** Top shelf for a focused dock app: popular titles, top songs, or recently played items. */
+/** Top shelf for a focused dock app: popular titles, channels, or recently played items. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShelfView(app: AppEntry, shelf: Shelf, onOpen: (ShelfItem) -> Unit, onFocusItem: (ShelfItem) -> Unit) {

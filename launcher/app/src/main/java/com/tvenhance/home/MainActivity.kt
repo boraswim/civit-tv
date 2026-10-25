@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         leftSinceResume = true
-        // Whatever opened over us (app tile, shelf item, now playing), let the pointer check for Apple Music.
+        // Whatever opened over us (app tile, shelf item, now playing), let the pointer check whether it needs to appear.
         MouseService.appOpening()
     }
 

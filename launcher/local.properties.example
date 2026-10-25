@@ -1,0 +1,11 @@
+# Copy to local.properties (which is git-ignored) and fill in.
+
+# Android SDK location (Android Studio writes this for you).
+sdk.dir=C\:\\Users\\<you>\\AppData\\Local\\Android\\Sdk
+
+# Free API key from https://www.themoviedb.org/settings/api, used for the movie/series shelves.
+# Leave empty to build without them.
+tmdb.apiKey=
+
+# City for the weather widget (Open-Meteo geocoding name).
+weather.city=Istanbul

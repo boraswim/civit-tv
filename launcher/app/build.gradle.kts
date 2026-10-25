@@ -1,0 +1,70 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+// Personal settings (TMDB key, weather city) live in local.properties, outside the source.
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.reader(Charsets.UTF_8)?.use { load(it) }
+}
+
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+}
+
+android {
+    namespace = "com.tvenhance.home"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.tvenhance.home"
+        minSdk = 24
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+        buildConfigField("String", "TMDB_KEY", "\"${localProps.getProperty("tmdb.apiKey", "").trim()}\"")
+        buildConfigField("String", "WEATHER_CITY", "\"${localProps.getProperty("weather.city", "Istanbul").trim()}\"")
+    }
+
+    buildTypes {
+        release {
+            // Compose debug builds are noticeably slow on TV boxes, so we ship an
+            // R8-optimised release signed with the local debug key.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+dependencies {
+    implementation(platform("androidx.compose:compose-bom:2025.05.01"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.core:core-ktx:1.16.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("dev.mobile:dadb:1.2.9") {
+        // dadb 1.2.9 leaks its JUnit test runtime into its published dependencies.
+        exclude(group = "org.junit.platform")
+        exclude(group = "org.junit.jupiter")
+        exclude(group = "org.graalvm.buildtools")
+    }
+}

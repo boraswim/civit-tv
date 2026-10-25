@@ -1,0 +1,40 @@
+# Personal settings: SDK path, TMDB API key, weather city (see launcher/local.properties.example)
+local.properties
+
+# Gradle / Kotlin / Android build output
+.gradle/
+.kotlin/
+build/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Third-party app packages (e.g. the Apple Music bundle). Proprietary, large, never committed.
+*.apkm
+*.apks
+*.xapk
+
+# Signing keys
+*.jks
+*.keystore
+
+# IDEs and OS clutter
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and scratch output
+*.log
+*.hprof
+
+# Personal Apple Music banner (made from Apple's logo); release builds use it when present,
+# everyone else gets the neutral one in src/main.
+launcher/app/src/release/res/drawable-xhdpi/banner_apple_music.png

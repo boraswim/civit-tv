@@ -4,7 +4,7 @@ An Apple TV 4K–style home screen for Android TV, plus PowerShell scripts that 
 and phones it runs alongside. Built for a Xiaomi Mi Box S (MIBOX4, Android TV 9) on a Samsung
 UE40JU7000, with a Turkish UI (English fallback).
 
-![ÇivitTV home screen](docs/home-screen.png)
+![ÇivitTV home screen](docs/home-screen.webp)
 
 ## What's in the launcher
 

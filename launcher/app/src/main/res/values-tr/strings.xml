@@ -49,7 +49,7 @@
     <string name="ezan_left_hm">%1$d sa %2$d dk kaldı</string>
     <string name="ezan_left_m">%1$d dk kaldı</string>
     <string name="ezan_now">Ezan vakti</string>
-    <string name="ezan_notice_soon">%1$s vaktine 30 dakika kaldı</string>
+    <string name="ezan_notice_soon">%1$s vaktine %2$d dakika kaldı</string>
     <string name="ezan_notice_now">%1$s vakti geldi</string>
     <string name="switch_failed">Geçiş yapılamadı. Geliştirici seçeneklerinde ağ üzerinden hata ayıklamanın açık olduğundan emin olun.</string>
 </resources>

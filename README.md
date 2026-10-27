@@ -22,7 +22,8 @@ UE40JU7000, with a Turkish UI (English fallback).
   - **Ezan vakti**: the next prayer time for Esenyurt/İstanbul and a countdown. The countdown turns red
     in the last 30 minutes and blinks red each time you return home in that window. It blinks white
     when the ezan time comes.
-- **Ezan notices over any app.** 30 minutes before each ezan and when it arrives, a card appears at
+- **Ezan notices over any app.** Ahead of each ezan (70 minutes before Akşam, 30 minutes before the
+  others) and when it arrives, a card appears at
   the top of the screen for 5 seconds with birdsong. Media that's playing is paused.
 - **Remote "mouse mode" for phone-only apps.** Sideloaded phone apps with no TV interface can get an
   on-screen pointer: arrows move it (hold to glide), OK taps, hold OK long-presses, and pushing against

@@ -19,9 +19,11 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.Executors
 
 /**
- * A 5-second card at the top of the screen, over whatever app is open, 30 minutes before each
- * ezan and when it arrives. Media that's playing is paused and five seconds of birdsong play. Run by the mouse service: as an accessibility service it is always
- * running and may draw over every app (video players included) without asking for more rights.
+ * A 5-second card at the top of the screen, over whatever app is open, ahead of each ezan
+ * (70 minutes before Akşam, 30 minutes before the others) and when it arrives. Media that's
+ * playing is paused and five seconds of birdsong play. Run by the mouse service: as an
+ * accessibility service it is always running and may draw over every app (video players
+ * included) without asking for more rights.
  */
 class EzanNotice(private val context: Context, private val wm: WindowManager) {
     private val main = Handler(Looper.getMainLooper())
@@ -59,8 +61,9 @@ class EzanNotice(private val context: Context, private val wm: WindowManager) {
                 next ?: return@post
                 val name = context.getString(next.nameRes)
                 val time = next.at.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
-                at(next.at.minusMinutes(SOON_MIN), "${next.at}/soon") {
-                    show(context.getString(R.string.next_ezan), context.getString(R.string.ezan_notice_soon, name), time, EZAN_RED)
+                val lead = leadMinutes(next.nameRes)
+                at(next.at.minusMinutes(lead), "${next.at}/soon") {
+                    show(context.getString(R.string.next_ezan), context.getString(R.string.ezan_notice_soon, name, lead), time, EZAN_RED)
                 }
                 at(next.at, "${next.at}/now") {
                     show(context.getString(R.string.ezan_now).uppercase(), context.getString(R.string.ezan_notice_now, name), time, Color.WHITE)
@@ -137,6 +140,9 @@ class EzanNotice(private val context: Context, private val wm: WindowManager) {
 
     private companion object {
         const val SOON_MIN = 30L
+        const val AKSAM_SOON_MIN = 70L // Akşam gets a longer heads-up
+
+        fun leadMinutes(nameRes: Int) = if (nameRes == R.string.ezan_aksam) AKSAM_SOON_MIN else SOON_MIN
         const val SHOW_MS = 5_000L
         const val RECHECK_MS = 10 * 60_000L
         const val LATE_MS = 60_000L // still show a notice that's up to a minute late

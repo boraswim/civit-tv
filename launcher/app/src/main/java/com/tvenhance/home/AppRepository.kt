@@ -100,7 +100,10 @@ class AppRepository(private val context: Context) {
     private fun entryFor(ri: ResolveInfo, category: String): AppEntry {
         val pkg = ri.activityInfo.packageName
         val updated = pm.getPackageInfo(pkg, 0).lastUpdateTime
-        cache[pkg]?.let { (stamp, entry) -> if (stamp == updated) return entry }
+        // An app can swap its launcher entry without updating (a new logo), and the old one then no longer opens.
+        cache[pkg]?.let { (stamp, entry) ->
+            if (stamp == updated && entry.launch.component?.className == ri.activityInfo.name) return entry
+        }
 
         val label = ri.loadLabel(pm).toString()
         val banner = bannerOverrides[pkg]?.let { context.getDrawable(it) }?.toBitmap(BANNER_W, BANNER_H, Bitmap.Config.ARGB_8888)

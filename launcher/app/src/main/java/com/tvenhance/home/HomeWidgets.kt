@@ -473,12 +473,12 @@ fun BirdLogo(modifier: Modifier) {
 
 /** Round frosted gear button for the top-right corner; opens Android's settings. */
 @Composable
-fun SettingsButton(onClick: () -> Unit) {
+fun SettingsButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     var focused by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (focused) 1.15f else 1f, spring(dampingRatio = 0.6f, stiffness = 420f), label = "gear")
     val ink = if (focused) Color(0xFF111114) else Color.White.copy(alpha = 0.9f)
     Box(
-        Modifier
+        modifier
             .size(40.dp)
             .graphicsLayer { scaleX = scale; scaleY = scale; shadowElevation = if (focused) 12.dp.toPx() else 0f; shape = CircleShape }
             .clip(CircleShape)

@@ -61,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
@@ -186,8 +187,15 @@ fun HomeScreen(
 
     LaunchedEffect(pendingFocus, items) {
         val pkg = pendingFocus ?: return@LaunchedEffect
-        withFrameNanos { }
-        runCatching { requester(pkg).requestFocus() }
+        // On a cold start the tiles appear a few frames after the app list loads, and a request
+        // made before that is silently dropped (Android then focuses the gear). Retry until it lands.
+        repeat(30) {
+            withFrameNanos { }
+            if (runCatching { requester(pkg).requestFocus() }.getOrDefault(false)) {
+                pendingFocus = null
+                return@LaunchedEffect
+            }
+        }
         pendingFocus = null
     }
 
@@ -350,7 +358,9 @@ fun HomeScreen(
         ) {
             TopWeather(weather, Modifier.padding(end = 18.dp))
             Clock(Modifier.padding(end = 20.dp))
-            SettingsButton {
+            // The gear sits outside the scrolling page, so DOWN is pointed at the dock explicitly.
+            val firstPkg = items.firstOrNull()?.pkg
+            SettingsButton(Modifier.focusProperties { if (firstPkg != null) down = requester(firstPkg) }) {
                 UiSounds.select()
                 runCatching {
                     context.startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
